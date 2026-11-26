@@ -1,5 +1,6 @@
 import { ArrowRight, Mic, ShieldCheck, Sliders, Sparkles } from 'lucide-react';
 import { useState } from 'react';
+import { PWAInstallButton } from '../components/PWAInstallButton';
 import { MUSIC_STYLES, MusicStyle, PageId } from '../types/music';
 
 interface HomePageProps {
@@ -30,22 +31,24 @@ export function HomePage({ onNavigate, onSelectStyleAndStart }: HomePageProps) {
             Enregistrez votre chant sans instrument ni métronome. BEATMAKER AI analyse votre tempo naturel, votre tonalité et vos émotions pour bâtir trois accompagnements sur mesure tout en gardant votre voix exactement telle qu&apos;elle est.
           </p>
 
-          <div className="flex flex-wrap items-center gap-4 pt-2">
+          <div className="flex flex-wrap items-center gap-3 pt-2">
             <button
               type="button"
               onClick={() => onNavigate('record')}
-              className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 transition-all whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+              className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 transition-all whitespace-nowrap shrink-0 cursor-pointer min-h-[48px]"
             >
               <Mic className="w-4 h-4" />
               Enregistrer ma voix
             </button>
 
+            <PWAInstallButton />
+
             <button
               type="button"
               onClick={() => onNavigate('library')}
-              className="inline-flex items-center gap-2 px-5 py-3.5 rounded-lg text-sm font-medium text-slate-200 bg-white/6 hover:bg-white/10 border border-white/10 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-3.5 rounded-lg text-sm font-medium text-slate-200 bg-white/6 hover:bg-white/10 border border-white/10 transition-colors whitespace-nowrap shrink-0 cursor-pointer min-h-[48px]"
             >
-              Explorer ma bibliothèque
+              Ma bibliothèque
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>

@@ -365,6 +365,36 @@ async function startServer() {
   const app = express();
   app.use(express.json({ limit: '28mb' }));
 
+  const allowedOrigins = new Set<string>([
+    'https://localhost',
+    'capacitor://localhost',
+    'http://localhost',
+    'http://localhost:3000',
+    'http://10.0.2.2:3000',
+  ]);
+  if (process.env.APP_URL) {
+    try {
+      allowedOrigins.add(new URL(process.env.APP_URL).origin);
+    } catch {
+      // Ignore invalid APP_URL
+    }
+  }
+
+  app.use('/api', (req: Request, res: Response, next: NextFunction) => {
+    const origin = req.headers.origin;
+    if (origin && allowedOrigins.has(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Vary', 'Origin');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    }
+    if (req.method === 'OPTIONS') {
+      res.status(204).end();
+      return;
+    }
+    next();
+  });
+
   // Auth Endpoints
   app.post('/api/auth/register', async (req: Request, res: Response) => {
     try {

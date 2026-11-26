@@ -5,8 +5,11 @@ import {
   extractAcousticHints,
   serializeAudioBuffer,
 } from './audio/audioUtils';
+import { AndroidBottomNav } from './components/AndroidBottomNav';
+import { OfflineIndicator } from './components/PWAInstallButton';
 import { StudioStepper } from './components/StudioStepper';
 import { TopNav } from './components/TopNav';
+import { apiUrl } from './utils/api';
 import { AnalyzePage } from './pages/AnalyzePage';
 import { AuthPage } from './pages/AuthPage';
 import { BeatsPage } from './pages/BeatsPage';
@@ -107,7 +110,7 @@ export default function App() {
     setIsTranscribing(true);
     try {
       const audioBase64 = await encodeCompactWavBase64(buffer, 28);
-      const res = await fetch('/api/transcribe-vocal', {
+      const res = await fetch(apiUrl('/api/transcribe-vocal'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ audioBase64, mimeType: 'audio/wav' }),
@@ -139,7 +142,7 @@ export default function App() {
       const audioBase64 = await encodeCompactWavBase64(vocalBuffer, 25);
       const acousticHints = extractAcousticHints(vocalBuffer);
 
-      const res = await fetch('/api/analyze-vocal', {
+      const res = await fetch(apiUrl('/api/analyze-vocal'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -190,7 +193,7 @@ export default function App() {
     if (!analysis) return;
     setRegeneratingBeats(true);
     try {
-      const res = await fetch('/api/generate-beats', {
+      const res = await fetch(apiUrl('/api/generate-beats'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ analysis, styles, emotionalTags }),
@@ -214,7 +217,7 @@ export default function App() {
         'R&B',
         'Pop',
       ]) as MusicStyle[];
-      const res = await fetch('/api/generate-beats', {
+      const res = await fetch(apiUrl('/api/generate-beats'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ analysis, styles, emotionalTags }),
@@ -269,7 +272,7 @@ export default function App() {
     await saveProjectToDb(record);
 
     if (authToken) {
-      await fetch('/api/projects', {
+      await fetch(apiUrl('/api/projects'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -322,7 +325,7 @@ export default function App() {
   const handleDeleteProject = async (id: string) => {
     await deleteProjectFromDb(id);
     if (authToken) {
-      await fetch(`/api/projects/${encodeURIComponent(id)}`, {
+      await fetch(apiUrl(`/api/projects/${encodeURIComponent(id)}`), {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${authToken}` },
       }).catch(() => {});
@@ -342,7 +345,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#07070D] text-slate-100">
+    <div className="min-h-screen flex flex-col bg-[#07070D] text-slate-100 pb-16 md:pb-0">
       <TopNav
         currentPage={page}
         onNavigate={setPage}
@@ -477,9 +480,9 @@ export default function App() {
         )}
       </main>
 
-      <footer className="border-t border-white/8 bg-[#07070D]">
+      <footer className="hidden md:block border-t border-white/8 bg-[#07070D]">
         <div className="max-w-[1360px] mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
-          <span>BEATMAKER AI · Studio vocal intelligent · Voix originale préservée</span>
+          <span>BEATMAKER AI · Studio vocal Android · Voix originale préservée</span>
           <div className="flex items-center gap-5">
             <button
               type="button"
@@ -505,6 +508,9 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      <AndroidBottomNav currentPage={page} onNavigate={setPage} />
+      <OfflineIndicator />
     </div>
   );
 }

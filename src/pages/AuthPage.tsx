@@ -1,6 +1,7 @@
 import { Lock, Mail, User } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { PageId, UserAccount } from '../types/music';
+import { apiUrl } from '../utils/api';
 
 interface AuthPageProps {
   onAuthenticated: (user: UserAccount, token: string) => void;
@@ -25,7 +26,7 @@ export function AuthPage({ onAuthenticated, onContinueLocal, onNavigate }: AuthP
       const payload =
         mode === 'login' ? { email, password } : { name, email, password };
 
-      const res = await fetch(endpoint, {
+      const res = await fetch(apiUrl(endpoint), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
