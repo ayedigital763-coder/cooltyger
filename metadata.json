@@ -1,0 +1,6 @@
+{
+  "name": "BEATMAKER AI",
+  "description": "Studio musical intelligent : chantez librement et l'IA compose un accompagnement professionnel autour de votre voix originale intacte.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
